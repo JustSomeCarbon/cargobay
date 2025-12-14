@@ -1,13 +1,3 @@
-.navigation a {
-  justify-content: center;
-  padding: 15px;
-  margin: 10px;
-}
-
-.mainpageinfo {
-  justify-content: left;
-}
-
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
