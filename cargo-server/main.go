@@ -4,7 +4,9 @@ import (
 	"fmt"
 	"net/http"
 
+	"cargobay-server/mulok"
 	"cargobay-server/ship"
+
 	"github.com/gorilla/mux"
 )
 
@@ -13,10 +15,14 @@ func home(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	var ds mulok.DataStore = mulok.InitializeHandler("./upload", 10 << 20, nil)
+
+	var handler = ship.ShipmentHandler{Datastore: ds}
+
 	r := mux.NewRouter()
 
 	r.HandleFunc("/", home).Methods("GET")
-	r.HandleFunc("/ship", ship.ShipCargo).Methods("POST")
+	r.HandleFunc("/ship", handler.ShipCargo).Methods("POST")
 	fmt.Println("Server is live on localhost:8080")
 	http.Handle("/", r)
 

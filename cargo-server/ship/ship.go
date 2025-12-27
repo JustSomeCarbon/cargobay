@@ -3,19 +3,23 @@ package ship
 import (
 	"errors"
 	"fmt"
-	"io"
-	"mime/multipart"
 	"net/http"
 	"os"
+
+	"cargobay-server/cargo"
+	"cargobay-server/mulok"
 )
 
-type cargo struct {
-	shipFile multipart.File
-	manifest *multipart.FileHeader
+type Cargo = cargo.Cargo
+
+type ShipmentHandler struct {
+	Datastore mulok.DataStore
 }
 
-func ShipCargo(w http.ResponseWriter, r *http.Request) {
-	err := r.ParseMultipartForm(10 << 20) // limit to 10 MB
+
+func (sh ShipmentHandler) ShipCargo(w http.ResponseWriter, r *http.Request) {
+
+	err := r.ParseMultipartForm(int64(sh.Datastore.MaxSize)) // limit to 10 MB
 	if err != nil {
 		http.Error(w, "Unable to parse form data", http.StatusBadRequest)
 		return
@@ -27,34 +31,25 @@ func ShipCargo(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Error Retrieving info from form body", http.StatusInternalServerError)
 		return
 	}
-	defer shipment.shipFile.Close()
+	defer shipment.ShipFile.Close()
 
-	dst, err := os.Create(shipment.manifest.Filename)
-	if err != nil {
-		http.Error(w, "Error creating destination file", http.StatusInternalServerError)
+	if sh.Datastore.HandleSingleZipUpload(w, shipment) != nil {
+		http.Error(w, "Error unloading file shipment to target store", http.StatusInternalServerError)
 		return
 	}
-	defer dst.Close()
 
-	// copy the file to the destination location
-	_, err = io.Copy(dst, shipment.shipFile)
-	if err != nil {
-		http.Error(w, "Error unable to save file", http.StatusInternalServerError)
-		return
-	}
-	fmt.Fprintf(w, "File uploaded successfully: %s", shipment.manifest.Filename)
+	fmt.Fprintf(w, "File uploaded successfully: %s", shipment.Manifest.Filename)
 }
 
-
-func extractFile(r *http.Request) (cargo, error) {
-	// extract file from request body
+// takes the request object and extracts the file header and the
+// file object itself.
+// A new cargo object is created from the
+// extrapolated information.
+func extractFile(r *http.Request) (Cargo, error) {
 	file, handler, err := r.FormFile("shippingFile")
 	if err != nil {
-		return cargo{shipFile: nil, manifest: nil}, errors.New("No file in form body")
+		return Cargo{ShipFile: nil, Manifest: nil}, errors.New("No file in form body")
 	}
-	return cargo{shipFile: file, manifest: handler}, nil
+	return Cargo{ShipFile: file, Manifest: handler}, nil
 }
 
-func unloadCargo(shipment cargo) error {
-	return nil
-}
