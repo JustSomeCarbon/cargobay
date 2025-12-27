@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
-	"os"
 
 	"cargobay-server/cargo"
 	"cargobay-server/mulok"

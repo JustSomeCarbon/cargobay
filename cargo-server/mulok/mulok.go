@@ -60,14 +60,14 @@ func generateFileName(length uint8) (string, error) {
 	by the datastore policies.
  */
 func (ds DataStore) HandleSingleZipUpload(w http.ResponseWriter, shipment Cargo)  error {
-	targetFileName, err := ds.fileNameGenerator(8)
+	targetFileName, err := ds.FileNameGenerator(8)
 	if err != nil {
 		fmt.Printf("")
 		return errors.New("")
 	}
 
 	// Create destination file at target path 
-	dst, err := os.Create(filepath.Join(ds.targetPath, targetFileName))
+	dst, err := os.Create(filepath.Join(ds.TargetPath, targetFileName))
 	if err != nil {
 		http.Error(w, "Error creating destination file", http.StatusInternalServerError)
 		return errors.New("Unable to create destination file")
