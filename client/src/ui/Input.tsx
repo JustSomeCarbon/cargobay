@@ -1,15 +1,14 @@
 
-type UpdateFileList = (files: FileList) => void;
+type UpdateInputEmail = (text: string) => void;
 
-export default function Input({ updateFileList }: { updateFileList: UpdateFileList }) {
+export default function Input({ updateEmail, email } : { updateEmail: UpdateInputEmail, email: string }) {
+
   return (
     <div>
-      <input type="file"
-        onChange={(e) => {
-          if (e.target.files) {
-            updateFileList(e.target.files);
-          }
-        }} multiple />
+      <input type="text"
+        value={email}
+        onChange={(e) => updateEmail(e.target.value)}
+      />
     </div>
   );
 }

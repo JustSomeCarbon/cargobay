@@ -1,1 +1,4 @@
-import React from "react";
+
+export function ShipOut(files: File[]) {
+  //
+}
