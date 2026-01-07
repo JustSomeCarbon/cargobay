@@ -8,7 +8,6 @@ import (
 	"encoding/hex"
 	"errors"
 	"fmt"
-	"net/http"
 	"os"
 	"path/filepath"
 
@@ -59,24 +58,29 @@ func generateFileName(length uint8) (string, error) {
   zip file provided by the request object, as detailed 
 	by the datastore policies.
  */
-func (ds DataStore) HandleSingleZipUpload(w http.ResponseWriter, shipment Cargo)  error {
+func (ds DataStore) HandleSingleZipUpload(shipment Cargo) error {
+	shipfile, err := shipment.Manifest.Open()
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+	defer shipfile.Close()
+
 	targetFileName, err := ds.FileNameGenerator(8)
 	if err != nil {
 		fmt.Printf("")
 		return errors.New("")
-	}
+	 }
 
 	// Create destination file at target path 
 	dst, err := os.Create(filepath.Join(ds.TargetPath, targetFileName))
 	if err != nil {
-		http.Error(w, "Error creating destination file", http.StatusInternalServerError)
 		return errors.New("Unable to create destination file")
 	}
 	defer dst.Close()
 
 	// copy file from memory to target file
-	if _, err := dst.ReadFrom(shipment.ShipFile); err != nil {
-		http.Error(w, "Error unable to save file", http.StatusInternalServerError)
+	if _, err := dst.ReadFrom(shipfile); err != nil {
 		return errors.New("Unable to save file to destination")
 	}
 	return nil

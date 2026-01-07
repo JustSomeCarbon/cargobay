@@ -17,8 +17,10 @@ func home(w http.ResponseWriter, r *http.Request) {
 func main() {
 	var ds mulok.DataStore = mulok.InitializeHandler("./upload", 10 << 20, nil)
 
+	// The server middleware upload handler
 	var handler = ship.ShipmentHandler{Datastore: ds}
 
+	// Mux router
 	r := mux.NewRouter()
 
 	r.HandleFunc("/", home).Methods("GET")

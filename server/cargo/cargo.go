@@ -5,6 +5,6 @@ import (
 )
 
 type Cargo struct {
-	ShipFile multipart.File
+	TargetEmail string
 	Manifest *multipart.FileHeader
 }
