@@ -5,7 +5,6 @@ import Input from "../ui/Input";
 
 export default function CargoUpload() {
   const [files, setFiles] = useState<File[]>([]);
-  const [origin, setOrigin] = useState("");
   const [target, setTarget] = useState("");
 
   const handleFileChange = (files: FileList) => {
@@ -15,7 +14,6 @@ export default function CargoUpload() {
   return (
     <div className="cargoUpload">
       <div className="manifestLabel">
-        <Input updateEmail={setOrigin} email={origin} />
         <Input updateEmail={setTarget} email={target} />
       </div>
 

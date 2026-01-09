@@ -1,4 +1,3 @@
-
 type UpdateInputEmail = (text: string) => void;
 
 export default function Input({ updateEmail, email } : { updateEmail: UpdateInputEmail, email: string }) {
@@ -7,7 +6,9 @@ export default function Input({ updateEmail, email } : { updateEmail: UpdateInpu
     <div>
       <input type="text"
         value={email}
-        onChange={(e) => updateEmail(e.target.value)}
+        onChange={(e) =>  { 
+          updateEmail(e.target.value);
+        }}
       />
     </div>
   );
