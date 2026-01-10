@@ -4,7 +4,9 @@ export default function Input({ updateEmail, email } : { updateEmail: UpdateInpu
 
   return (
     <div>
-      <input type="text"
+      <input
+        className="border border-gray-600 rounded px-2 py-1"
+        type="text"
         value={email}
         onChange={(e) =>  { 
           updateEmail(e.target.value);

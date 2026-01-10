@@ -1,4 +1,3 @@
-import './App.css'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import CargoUpload from './components/cargoUpload';
 
@@ -8,7 +7,7 @@ function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <div className='body'>
+      <div className='min-h-screen w-screen flex items-center justify-center'>
         <CargoUpload />
       </div>
     </QueryClientProvider>
