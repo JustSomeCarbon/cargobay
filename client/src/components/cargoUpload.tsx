@@ -3,13 +3,14 @@ import { ShipOut } from "../util/ShipOut";
 import FileInput from "../ui/FileInput";
 import Input from "../ui/Input";
 import type { shipment } from "../util/cargoData";
+import FileArea from "./FileArea";
 
 export default function CargoUpload() {
   const [files, setFiles] = useState<File[]>([]);
   const [target, setTarget] = useState("");
 
-  const handleFileChange = (files: FileList) => {
-    setFiles(Array.from(files));
+  const handleFileChange = (files: File[]) => {
+    setFiles(files);
   }
 
   return (
@@ -22,7 +23,7 @@ export default function CargoUpload() {
       </div>
 
       <div className="items-center gap-3">
-        <FileInput updateFileList={handleFileChange} />
+        <FileArea onChange={handleFileChange} files={files} />
         <button
           className="inline-flex items-center justify-center border border-gray-300 rounded px-2 my-3 cursor-pointer hover:bg-blue-50"
           onClick={() => {

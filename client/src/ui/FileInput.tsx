@@ -1,5 +1,5 @@
 
-type UpdateFileList = (files: FileList) => void;
+type UpdateFileList = (files: File[]) => void;
 
 export default function FileInput({ updateFileList }: { updateFileList: UpdateFileList }) {
   return (
@@ -16,7 +16,7 @@ export default function FileInput({ updateFileList }: { updateFileList: UpdateFi
         type="file"
         onChange={(e) => {
           if (e.target.files) {
-            updateFileList(e.target.files);
+            updateFileList(Array.from(e.target.files));
           }
         }}
         multiple
